@@ -196,7 +196,8 @@ class EnvCompatibleRepositorySecret(RepositoryEmpty):
 
     def __init__(self, source='/run/secrets/', removeprefix=''):
         self.data = {}
-
+        if not os.path.exists(source):
+            return
         ls = os.listdir(source)
         for file in ls:
             with open(os.path.join(source, file), 'r') as f:
