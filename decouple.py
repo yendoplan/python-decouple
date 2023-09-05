@@ -201,7 +201,7 @@ class EnvCompatibleRepositorySecret(RepositoryEmpty):
         ls = os.listdir(source)
         for file in ls:
             with open(os.path.join(source, file), 'r') as f:
-                self.data[file.removeprefix(removeprefix).upper()] = f.read()
+                self.data[file.removeprefix(removeprefix).upper()] = f.read().strip()
 
     def __contains__(self, key):
         return key in os.environ or key in self.data
