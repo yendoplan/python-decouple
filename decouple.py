@@ -188,6 +188,27 @@ class RepositorySecret(RepositoryEmpty):
         return self.data[key]
 
 
+class EnvCompatibleRepositorySecret(RepositoryEmpty):
+    """
+    Same as RepositorySecret, but removes the prefix if it matches the given removeprefix value (first)
+    and converts found file names into upper case (second).
+    """
+
+    def __init__(self, source='/run/secrets/', removeprefix=''):
+        self.data = {}
+
+        ls = os.listdir(source)
+        for file in ls:
+            with open(os.path.join(source, file), 'r') as f:
+                self.data[file.removeprefix(removeprefix).upper()] = f.read()
+
+    def __contains__(self, key):
+        return key in os.environ or key in self.data
+
+    def __getitem__(self, key):
+        return self.data[key]
+
+
 class AutoConfig(object):
     """
     Autodetects the config file and type.
